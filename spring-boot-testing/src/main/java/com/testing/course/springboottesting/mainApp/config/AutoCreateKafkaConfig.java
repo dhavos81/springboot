@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 @Configuration
 //@Profile("local")
 public class AutoCreateKafkaConfig {
-
+/*
     @Bean
     public NewTopic employeeEvents(){
         return TopicBuilder
@@ -19,4 +19,5 @@ public class AutoCreateKafkaConfig {
                 .partitions(1)
                 .build();
     }
+ */
 }
