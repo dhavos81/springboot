@@ -56,6 +56,7 @@ public class EmployeeControllerITest {
         restTemplate = new RestTemplate();
         log.info("application started on port:{}", port);
         log.info("Initializing DB..");
+        jdbcTemplate.execute("delete from EMPLOYEES_TECHNOLOGY");
         jdbcTemplate.execute("delete from employees");
         //jdbcTemplate.execute("insert into employees(first_name, last_name, email) values('Jay', 'Bochinski', 'jon@gmail.com')");
 
@@ -68,7 +69,7 @@ public class EmployeeControllerITest {
         //given
 
         //when
-        ResultActions response = mockMvc.perform(post("/api/employee")
+        ResultActions response = mockMvc.perform(post("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employee))
         );
@@ -108,7 +109,7 @@ public class EmployeeControllerITest {
 
         Employee employeeFromDB = employeeRepository.save(employee);
         //when
-        ResultActions response = mockMvc.perform(get("/api/employee/{id}", employeeFromDB.getId())
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeFromDB.getId())
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -125,7 +126,7 @@ public class EmployeeControllerITest {
         //given
 
         //when
-        ResultActions response = mockMvc.perform(get("/api/employee/{id}", -1)
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", -1)
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -147,7 +148,7 @@ public class EmployeeControllerITest {
         Employee employeeFromDB = employeeRepository.save(employee);
 
         //when
-        ResultActions response = mockMvc.perform(put("/api/employee/{id}", employeeFromDB.getId())
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", employeeFromDB.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employeeToUpdate))
         );
@@ -166,7 +167,7 @@ public class EmployeeControllerITest {
         //given
 
         //when
-        ResultActions response = mockMvc.perform(put("/api/employee/{id}", -1L)
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", -1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employee))
         );
@@ -185,7 +186,7 @@ public class EmployeeControllerITest {
         Employee employeeFromDB = employeeRepository.save(employee);
 
         //when
-        ResultActions response = mockMvc.perform(delete("/api/employee/{id}", employeeFromDB.getId())
+        ResultActions response = mockMvc.perform(delete("/api/employees/{id}", employeeFromDB.getId())
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
