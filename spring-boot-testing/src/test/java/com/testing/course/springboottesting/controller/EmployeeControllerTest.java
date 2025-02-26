@@ -1,13 +1,13 @@
 package com.testing.course.springboottesting.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testing.course.springboottesting.mainApp.controller.EmployeeController;
 import com.testing.course.springboottesting.mainApp.model.Employee;
 import com.testing.course.springboottesting.mainApp.service.EmployeeService;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -18,17 +18,22 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+//import static org.mockito.BDDMockito.when;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
-@WebMvcTest
+@WebMvcTest(controllers = EmployeeController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EmployeeControllerTest {
 
     @Autowired
@@ -52,6 +57,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Order(value = 1)
     @DisplayName("JUnit test for create employee")
     public void givenEmployee_whenCreateEmployee_thenReturnSavedEmployee() throws Exception {
 
@@ -60,7 +66,7 @@ public class EmployeeControllerTest {
         //given(employeeService.saveEmployee(any(Employee.class))).willReturn(employee);
 
         //when
-        ResultActions response = mockMvc.perform(post("/api/employee")
+        ResultActions response = mockMvc.perform(post("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employee))
         );
@@ -75,6 +81,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Order(value = 6)
     @DisplayName("JUnit test for get all employees")
     public void givenListOfEmployees_whenGetAllEmployees_thenReturnEmployeeList() throws Exception {
 
@@ -97,6 +104,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Order(value = 4)
     @DisplayName("JUnit test for get employee by id (positive scenario)")
     public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() throws Exception {
 
@@ -105,7 +113,7 @@ public class EmployeeControllerTest {
         given(employeeService.findById(employeeId)).willReturn(Optional.of(employee));
 
         //when
-        ResultActions response = mockMvc.perform(get("/api/employee/{id}", employeeId)
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId)
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -116,6 +124,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Order(value = 5)
     @DisplayName("JUnit test for get employee by id (negative scenerio)")
     public void givenInvalidEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() throws Exception {
 
@@ -124,7 +133,7 @@ public class EmployeeControllerTest {
         given(employeeService.findById(employeeId)).willReturn(Optional.empty());
 
         //when
-        ResultActions response = mockMvc.perform(get("/api/employee/{id}", employeeId)
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId)
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -135,6 +144,7 @@ public class EmployeeControllerTest {
 
 
     @Test
+    @Order(value = 2)
     @DisplayName("JUnit test for update employee (positive scenerio)")
     public void givenEmployee_whenUpdateEmployee_thenReturnUpdatedEmployeeObject() throws Exception {
 
@@ -150,7 +160,7 @@ public class EmployeeControllerTest {
         given(employeeService.updateEmployee(any(Employee.class))).willAnswer((invocation)-> invocation.getArgument(0));
 
         //when
-        ResultActions response = mockMvc.perform(put("/api/employee/{id}", employeeId)
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", employeeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employeeToUpdate))
         );
@@ -163,6 +173,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Order(value = 3)
     @DisplayName("JUnit test for update employee (negative scenerio)")
     public void givenEmployee_whenEmployeeNotFound_thenReturnNotFoundSTatusCode() throws Exception {
 
@@ -172,7 +183,7 @@ public class EmployeeControllerTest {
         given(employeeService.findById(employeeId)).willReturn(Optional.empty());
 
         //when
-        ResultActions response = mockMvc.perform(put("/api/employee/{id}", employeeId)
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", employeeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employee))
         );
@@ -186,16 +197,19 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Order(value = 7)
     @DisplayName("JUnit test for delete employee")
     public void givenEmployeeId_whenDeleteEmployee_thenReturnSuccessMessage() throws Exception {
 
         //given
         long employeeId = 1L;
 
+        given(employeeService.findById(employeeId)).willReturn(Optional.of(employee));
+        //doNothing().when(employeeService).deleteEmployee(employeeId);
         willDoNothing().given(employeeService).deleteEmployee(employeeId);
 
         //when
-        ResultActions response = mockMvc.perform(delete("/api/employee/{id}", employeeId)
+        ResultActions response = mockMvc.perform(delete("/api/employees/{id}", employeeId)
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
