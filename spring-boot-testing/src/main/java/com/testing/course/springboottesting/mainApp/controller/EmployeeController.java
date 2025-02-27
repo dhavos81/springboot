@@ -45,7 +45,7 @@ public class EmployeeController {
                     return employeeMapper.entityToDTO(employee);
                 })
                 .collect(Collectors.toList());
-        return new BaseResponse(employeeList);
+        return new BaseResponse(employeeDTOList);
     }
 
     @GetMapping("/{employeeId}")

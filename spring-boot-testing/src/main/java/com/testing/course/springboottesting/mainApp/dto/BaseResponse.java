@@ -16,9 +16,9 @@ import java.util.UUID;
 @ToString
 public class BaseResponse {
     protected UUID uuid;
-    protected List<Employee> employeeList;
+    protected List<EmployeeDTO> employeeList;
 
-    public BaseResponse(List<Employee> employeeList){
+    public BaseResponse(List<EmployeeDTO> employeeList){
         this.employeeList=employeeList;
         this.uuid = returnUUIDIfExist();
     }
