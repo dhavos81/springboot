@@ -3,6 +3,7 @@ package com.testing.course.springboottesting.mapper;
 
 
 
+import com.testing.course.springboottesting.main.BaseTest;
 import com.testing.course.springboottesting.mainApp.dto.EmployeeDTO;
 import com.testing.course.springboottesting.mainApp.mapper.EmployeeMapper;
 import com.testing.course.springboottesting.mainApp.model.Employee;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class EmployeeMapperTest {
+public class EmployeeMapperTest implements BaseTest {
 
     @Autowired
     EmployeeMapper employeeMapper;

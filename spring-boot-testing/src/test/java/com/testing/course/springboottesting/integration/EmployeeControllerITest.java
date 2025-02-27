@@ -1,6 +1,7 @@
 package com.testing.course.springboottesting.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testing.course.springboottesting.main.BaseTest;
 import com.testing.course.springboottesting.mainApp.model.Employee;
 import com.testing.course.springboottesting.mainApp.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class EmployeeControllerITest {
+public class EmployeeControllerITest implements BaseTest {
 
     @Autowired
     MockMvc mockMvc;

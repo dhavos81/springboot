@@ -1,6 +1,7 @@
 package com.testing.course.springboottesting.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testing.course.springboottesting.main.BaseTest;
 import com.testing.course.springboottesting.mainApp.controller.EmployeeController;
 import com.testing.course.springboottesting.mainApp.model.Employee;
 import com.testing.course.springboottesting.mainApp.service.EmployeeService;
@@ -34,7 +35,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 @WebMvcTest(controllers = EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class EmployeeControllerTest {
+public class EmployeeControllerTest implements BaseTest {
 
     @Autowired
     MockMvc mockMvc;

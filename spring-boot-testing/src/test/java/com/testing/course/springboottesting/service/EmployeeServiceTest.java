@@ -1,6 +1,7 @@
 package com.testing.course.springboottesting.service;
 
 
+import com.testing.course.springboottesting.main.BaseTest;
 import com.testing.course.springboottesting.mainApp.exception.ResourceNotFoundException;
 import com.testing.course.springboottesting.mainApp.model.Employee;
 import com.testing.course.springboottesting.mainApp.repository.EmployeeRepository;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class EmployeeServiceTest {
+public class EmployeeServiceTest implements BaseTest {
     @Mock
     private EmployeeRepository employeeRepository;
     @InjectMocks

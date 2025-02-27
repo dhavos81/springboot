@@ -1,5 +1,6 @@
 package com.testing.course.springboottesting.repository;
 
+import com.testing.course.springboottesting.main.BaseTest;
 import com.testing.course.springboottesting.mainApp.model.Employee;
 import com.testing.course.springboottesting.mainApp.repository.EmployeeRepository;
 import org.assertj.core.api.Assertions;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
-public class EmploeeRepositoryTests {
+public class EmploeeRepositoryTests implements BaseTest {
 
     @Autowired
     EmployeeRepository employeeRepository;

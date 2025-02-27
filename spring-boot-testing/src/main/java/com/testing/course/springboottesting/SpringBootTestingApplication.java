@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class SpringBootTestingApplication {
 
 	@Bean
 	@Autowired
+	@Profile("!test")
 	public CommandLineRunner commandLineRunner (String[] args, EmployeeService employeeService){
 		return runner -> {
 			Employee employee1 = Employee.builder()
@@ -58,5 +60,4 @@ public class SpringBootTestingApplication {
 			employeeService.saveEmployee(employee2);
 		};
 	}
-
 }
