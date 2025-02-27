@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,21 +40,29 @@ public class EmployeeController {
     }
 
     @GetMapping("")
-    public BaseResponse getAllEmployees (){
+    public ResponseEntity<BaseResponse> getAllEmployees (){
         List<Employee> employeeList = employeeService.findAll();
         List<EmployeeDTO> employeeDTOList = employeeList.stream()
                 .map(employee -> {
                     return employeeMapper.entityToDTO(employee);
                 })
                 .collect(Collectors.toList());
-        return new BaseResponse(employeeDTOList);
+        return (new ResponseEntity<>(new BaseResponse(employeeDTOList),HttpStatus.OK));
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable("employeeId")long employeeId){
+    public ResponseEntity<BaseResponse> getEmployeeById(@PathVariable("employeeId")long employeeId){
+        Optional<Employee> employeeOptional = employeeService.findById(employeeId);
+        if(employeeOptional.isPresent()){
+            Employee employee = employeeOptional.get();
+            return new ResponseEntity<>(new BaseResponse(new ArrayList<EmployeeDTO>(Arrays.asList(employeeMapper.entityToDTO(employee)))),HttpStatus.OK);
+        }else{
+            throw new EmployeeNotFoundException("Employee not found");
+        }
+        /*
         return employeeService.findById(employeeId)
                 .map(ResponseEntity::ok)
-                .orElseThrow(()->new EmployeeNotFoundException("Employee not found"));
+                .orElseThrow(()->new EmployeeNotFoundException("Employee not found")); */
     }
 
     @PutMapping("/simple")
@@ -101,7 +111,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/secured/employees")
-    public BaseResponse getAllEmployeesSecured (){
+    public ResponseEntity<BaseResponse> getAllEmployeesSecured (){
         return getAllEmployees();
     }
 }
