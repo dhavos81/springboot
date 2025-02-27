@@ -3,14 +3,17 @@ package com.testing.course.springboottesting.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testing.course.springboottesting.main.BaseTest;
 import com.testing.course.springboottesting.mainApp.controller.EmployeeController;
+import com.testing.course.springboottesting.mainApp.mapper.EmployeeMapper;
 import com.testing.course.springboottesting.mainApp.model.Employee;
 import com.testing.course.springboottesting.mainApp.service.EmployeeService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.*;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -35,6 +38,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 @WebMvcTest(controllers = EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ComponentScan(basePackages = {"com.testing.course.springboottesting.mainApp.mapper"}) //for mapper
 public class EmployeeControllerTest implements BaseTest {
 
     @Autowired
@@ -47,6 +51,9 @@ public class EmployeeControllerTest implements BaseTest {
     private ObjectMapper objectMapper;
 
     private Employee employee;
+
+    @Spy
+    EmployeeMapper employeeMapper;
 
     @BeforeEach
     public void setup(){
@@ -101,7 +108,9 @@ public class EmployeeControllerTest implements BaseTest {
         //then
         response.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", CoreMatchers.is(employeeList.size())));
+                .andExpect(jsonPath("$.size()", CoreMatchers.is(employeeList.size())))
+                .andExpect(jsonPath("$[0].firstName", CoreMatchers.is(employee.getFirstName())))
+                .andExpect(jsonPath("$[1].firstName", CoreMatchers.is(employeeList.get(1).getFirstName())));
     }
 
     @Test

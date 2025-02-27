@@ -1,6 +1,8 @@
 package com.testing.course.springboottesting.mainApp.controller;
 
 
+import com.testing.course.springboottesting.mainApp.dto.EmployeeDTO;
+import com.testing.course.springboottesting.mainApp.mapper.EmployeeMapper;
 import com.testing.course.springboottesting.mainApp.model.Employee;
 import com.testing.course.springboottesting.mainApp.rest.EmployeeNotFoundException;
 import com.testing.course.springboottesting.mainApp.service.EmployeeService;
@@ -11,12 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
     private EmployeeService employeeService;
+
+    @Autowired
+    EmployeeMapper employeeMapper;
 
     @Autowired
     EmployeeController(EmployeeService employeeService){
@@ -30,8 +37,15 @@ public class EmployeeController {
     }
 
     @GetMapping("")
-    public List<Employee> getAllEmployees (){
-        return employeeService.findAll();
+    public List<EmployeeDTO> getAllEmployees (){
+        List<Employee> employeeList = employeeService.findAll();
+        List<EmployeeDTO> employeeDTOList = employeeList.stream()
+                .map(employee -> {
+                    return employeeMapper.entityToDTO(employee);
+                })
+                .collect(Collectors.toList());
+
+        return employeeDTOList;
     }
 
     @GetMapping("/{employeeId}")
@@ -87,7 +101,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/secured/employees")
-    public List<Employee> getAllEmployeesSecured (){
+    public List<EmployeeDTO> getAllEmployeesSecured (){
         return getAllEmployees();
     }
 }
