@@ -1,6 +1,7 @@
 package com.testing.course.springboottesting.mainApp.controller;
 
 
+import com.testing.course.springboottesting.mainApp.dto.BaseResponse;
 import com.testing.course.springboottesting.mainApp.dto.EmployeeDTO;
 import com.testing.course.springboottesting.mainApp.mapper.EmployeeMapper;
 import com.testing.course.springboottesting.mainApp.model.Employee;
@@ -37,15 +38,14 @@ public class EmployeeController {
     }
 
     @GetMapping("")
-    public List<EmployeeDTO> getAllEmployees (){
+    public BaseResponse getAllEmployees (){
         List<Employee> employeeList = employeeService.findAll();
         List<EmployeeDTO> employeeDTOList = employeeList.stream()
                 .map(employee -> {
                     return employeeMapper.entityToDTO(employee);
                 })
                 .collect(Collectors.toList());
-
-        return employeeDTOList;
+        return new BaseResponse(employeeList);
     }
 
     @GetMapping("/{employeeId}")
@@ -101,7 +101,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/secured/employees")
-    public List<EmployeeDTO> getAllEmployeesSecured (){
+    public BaseResponse getAllEmployeesSecured (){
         return getAllEmployees();
     }
 }

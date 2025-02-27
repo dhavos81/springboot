@@ -108,9 +108,9 @@ public class EmployeeControllerTest implements BaseTest {
         //then
         response.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", CoreMatchers.is(employeeList.size())))
-                .andExpect(jsonPath("$[0].firstName", CoreMatchers.is(employee.getFirstName())))
-                .andExpect(jsonPath("$[1].firstName", CoreMatchers.is(employeeList.get(1).getFirstName())));
+                .andExpect(jsonPath("$.employeeList.size()", CoreMatchers.is(employeeList.size())))
+                .andExpect(jsonPath("$.employeeList.[0].firstName", CoreMatchers.is(employee.getFirstName())))
+                .andExpect(jsonPath("$.employeeList.[1].firstName", CoreMatchers.is(employeeList.get(1).getFirstName())));
     }
 
     @Test

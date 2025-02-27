@@ -1,12 +1,14 @@
 package com.testing.course.springboottesting.mainApp.rest;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class EmployeeErrorResponse {
 
     private int status;
     private String message;
     private Date timestamp;
+    private UUID uuid;
 
     public int getStatus() {
         return status;
@@ -30,5 +32,13 @@ public class EmployeeErrorResponse {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public UUID getUUID() {
+        return uuid;
+    }
+
+    public void setUUID(UUID uuid) {
+        this.uuid = uuid;
     }
 }

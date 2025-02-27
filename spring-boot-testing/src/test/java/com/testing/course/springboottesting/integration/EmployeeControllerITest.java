@@ -99,7 +99,7 @@ public class EmployeeControllerITest implements BaseTest {
         //then
         response.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", CoreMatchers.is(1)));
+                .andExpect(jsonPath("$.employeeList.size()", CoreMatchers.is(1)));
     }
 
     @Test

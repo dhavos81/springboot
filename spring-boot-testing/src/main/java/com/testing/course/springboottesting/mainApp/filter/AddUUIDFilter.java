@@ -18,7 +18,7 @@ import java.util.UUID;
 @WebFilter("/*") // Add to all
 public class AddUUIDFilter implements Filter {
 
-    private static final String UUID_KEY = "requestUUID";
+    public static final String UUID_KEY = "requestUUID";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
