@@ -66,24 +66,30 @@ public class EmployeeController {
     }
 
     @PutMapping("/simple")
-    public ResponseEntity<Employee> updateEmployeeSipmple(@RequestBody Employee employee){
-        return new ResponseEntity<>(employeeService.updateEmployee(employee),HttpStatus.OK);
+    public ResponseEntity<BaseResponse> updateEmployeeSipmple(@RequestBody EmployeeDTO employeeDTO){
+        Employee employee = employeeMapper.dTOToEntity(employeeDTO);
+        employee = employeeService.updateEmployee(employee);
+        employeeDTO = employeeMapper.entityToDTO(employee);
+        return new ResponseEntity<>(new BaseResponse(new ArrayList<EmployeeDTO>(Arrays.asList(employeeDTO))),HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") long employeeId, @RequestBody Employee employee) {
+    public ResponseEntity<BaseResponse> updateEmployee(@PathVariable("id") long employeeId, @RequestBody EmployeeDTO employeeDTO) {
         Optional<Employee> optionalEmployee = employeeService.findById(employeeId);
         if (optionalEmployee.isPresent()) {
+            Employee employee = employeeMapper.dTOToEntity(employeeDTO);
             Employee employeeDB = optionalEmployee.get();
             employeeDB.setFirstName(employee.getFirstName());
             employeeDB.setLastName(employee.getLastName());
             employeeDB.setEmail(employee.getEmail());
-            employeeService.updateEmployee(employeeDB);
-            return new ResponseEntity<>(employeeDB, HttpStatus.OK);
-        } else if (true) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            employee = employeeService.updateEmployee(employeeDB);
+            employeeDTO = employeeMapper.entityToDTO(employee);
+            return new ResponseEntity<>(new BaseResponse(new ArrayList<EmployeeDTO>(Arrays.asList(employeeDTO))),HttpStatus.OK);
+        } else {
+            throw new EmployeeNotFoundException("Employee not found");
+            //return new ResponseEntity(new BaseResponse(null), HttpStatus.NOT_FOUND);
         }
-
+        /*
         return employeeService.findById(employeeId)
                 .map(savedEmployee -> {
                     savedEmployee.setFirstName(employee.getFirstName());
@@ -92,7 +98,7 @@ public class EmployeeController {
                     Employee updatedEmployee = employeeService.updateEmployee(savedEmployee);
                     return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
                 })
-                .orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND)); */
     }
 
     @DeleteMapping("/{id}")
@@ -102,7 +108,7 @@ public class EmployeeController {
                     employeeService.deleteEmployee(foundEmployee.getId());
                     return new ResponseEntity<String>("Deleted successfully", HttpStatus.OK);
                 })
-                .orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found"));
     }
 
     @GetMapping("/runtimeEx")

@@ -157,7 +157,7 @@ public class EmployeeControllerITest implements BaseTest {
         //then
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", CoreMatchers.is(employeeToUpdate.getFirstName())));
+                .andExpect(jsonPath("$.employeeList.[0].firstName", CoreMatchers.is(employeeToUpdate.getFirstName())));
 
     }
 

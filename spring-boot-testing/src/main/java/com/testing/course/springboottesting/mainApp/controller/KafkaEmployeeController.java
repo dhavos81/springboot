@@ -3,9 +3,8 @@ package com.testing.course.springboottesting.mainApp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.testing.course.springboottesting.mainApp.domain.AddEmployeeEvent;
-import com.testing.course.springboottesting.mainApp.producer.EmployeeEventProducer;
+import com.testing.course.springboottesting.mainApp.kafka.producer.EmployeeEventProducer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
