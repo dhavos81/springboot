@@ -3,6 +3,7 @@ package com.testing.course.springboottesting.mainApp.kafka.producer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testing.course.springboottesting.mainApp.domain.AddEmployeeEvent;
+import com.testing.course.springboottesting.mainApp.model.Employee;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -27,7 +28,7 @@ public class EmployeeEventProducer {
     ObjectMapper objectMapper;
 
     public void sendAddEmployeeEvent(AddEmployeeEvent addEmployeeEvent) throws JsonProcessingException {
-        String jsonRepresentation = objectMapper.writeValueAsString(addEmployeeEvent.getEmployee());
+        String jsonRepresentation = objectMapper.writeValueAsString(addEmployeeEvent.getEmployeeDTO());
         CompletableFuture<SendResult<Long,String>> result =  kafkaTemplate.sendDefault(addEmployeeEvent.getAddEmployeeEventId(), jsonRepresentation);
         result.whenComplete((msg,ex)->{
             if (ex != null) {
@@ -39,17 +40,15 @@ public class EmployeeEventProducer {
         });
     }
 
-    public void sendAddEmployeeEventSynch(AddEmployeeEvent addEmployeeEvent) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
-        String jsonRepresentation = objectMapper.writeValueAsString(addEmployeeEvent.getEmployee());
+    public void sendAddEmployeeEventSynch(Long id, Employee employee) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+        String jsonRepresentation = objectMapper.writeValueAsString(employee);
         SendResult<Long,String> result;
         try{
-            result =  kafkaTemplate.sendDefault(addEmployeeEvent.getAddEmployeeEventId(), jsonRepresentation).get(2, TimeUnit.SECONDS);
+            result =  kafkaTemplate.sendDefault(id, jsonRepresentation).get(2, TimeUnit.SECONDS);
         }catch(Exception ex){
             log.error("Error sending employee to kafka synch", ex);
             throw ex;
         }
         log.info("Added employee to topic synch {}: ", result.toString());
-
     }
-
 }

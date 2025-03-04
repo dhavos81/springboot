@@ -1,6 +1,6 @@
 package com.testing.course.springboottesting.mainApp.domain;
 
-import com.testing.course.springboottesting.mainApp.model.Employee;
+import com.testing.course.springboottesting.mainApp.dto.EmployeeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class AddEmployeeEvent {
 
     private Long addEmployeeEventId;
-    private Employee employee;
+    private EmployeeDTO employeeDTO;
 }
