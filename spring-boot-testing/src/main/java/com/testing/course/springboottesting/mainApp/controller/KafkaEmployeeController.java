@@ -31,6 +31,6 @@ public class KafkaEmployeeController {
 
         //employeeEventProducer.sendAddEmployeeEvent(addEmployeeEvent);
         employeeEventProducer.sendAddEmployeeEventSynch(addEmployeeEvent.getAddEmployeeEventId(), employeeMapper.dTOToEntity(addEmployeeEvent.getEmployeeDTO()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(addEmployeeEvent);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(addEmployeeEvent);
     }
 }
