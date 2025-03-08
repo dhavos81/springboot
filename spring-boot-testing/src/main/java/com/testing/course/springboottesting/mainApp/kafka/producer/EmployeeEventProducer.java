@@ -44,7 +44,9 @@ public class EmployeeEventProducer {
         String jsonRepresentation = objectMapper.writeValueAsString(employee);
         SendResult<Long,String> result;
         try{
-            result =  kafkaTemplate.sendDefault(id, jsonRepresentation).get(2, TimeUnit.SECONDS);
+            //result =  kafkaTemplate.sendDefault(id, jsonRepresentation).get(2, TimeUnit.SECONDS);
+            result = kafkaTemplate.send("employee-events", jsonRepresentation).get(2, TimeUnit.SECONDS);
+
         }catch(Exception ex){
             log.error("Error sending employee to kafka synch", ex);
             throw ex;
