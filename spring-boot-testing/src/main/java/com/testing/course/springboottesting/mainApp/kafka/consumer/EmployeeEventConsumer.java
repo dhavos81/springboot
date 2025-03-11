@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.net.SocketTimeoutException;
 
+import static org.springframework.kafka.retrytopic.DltStrategy.FAIL_ON_ERROR;
+
 @Slf4j
 @Component
 //@KafkaListener(id = "multiGroup", topics = "employee-events", groupId = "main-group-id")
@@ -28,23 +30,29 @@ public class EmployeeEventConsumer {
     ObjectMapper objectMapper;
 
     //@KafkaHandler
-    @RetryableTopic(attempts = "5", backoff = @Backoff(delay = 3000L, maxDelay = 6000L, multiplier = 2), timeout = "6000000")
-    //@RetryableTopic(kafkaTemplate = "myRetryableTopicKafkaTemplate")
-    @KafkaListener(topics = "employee-events")
+    @RetryableTopic(attempts = "5",
+            dltStrategy = FAIL_ON_ERROR,
+            backoff = @Backoff(delay = 3000L, maxDelay = 6000L, multiplier = 2),
+            timeout = "6000000",
+            retryTopicSuffix = "main-",
+            dltTopicSuffix = "dlt-main-")
+    @KafkaListener(topics = "employee-events", groupId = "main-employee-events-group-id" )
     public void consumeMessage(String message) throws ShouldRetryNonBlockingException {
         log.info("Received message: {}", message);
         //simulate problem of processing message
         if(true) throw new ShouldRetryNonBlockingException();
+
         try {
             employeeService.saveEmployee(objectMapper.readValue(message, Employee.class));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        //send email to user
     }
 
     @DltHandler
     public void processDltMessage(String message) {
-        log.info("In DLQ");
-        // ... message processing, persistence, etc
+        log.info("In" + this.getClass() + " employee message failed and put into DLQ, processing it in DLQ" + message);
+        // do additional things to message
     }
 }
